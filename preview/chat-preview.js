@@ -4,6 +4,8 @@ var AI_URL="https://text.pollinations.ai/openai";
 var SYS=[
 "Você é o assistente virtual do site do curso English Together. Fala português brasileiro informal e amigável, como uma pessoa de verdade no chat.",
 "Respostas curtas: no máximo 3 frases. Pode cumprimentar de volta e conversar naturalmente.",
+"Responda SOMENTE em português brasileiro, nunca em inglês.",
+"Vá direto à resposta: nunca narre seu raciocínio, nunca comece com frases como 'we should', 'let me', 'I will' ou similares.",
 "Responda SOMENTE com base nestas informações do curso:",
 "- Curso English Together, do professor Ezequiel Barcelos, formado em Letras (Português e Inglês), mais de 20 anos ensinando e mais de 9 mil alunos, com alunos em mais de 7 países.",
 "- O curso é pensado para brasileiros: serve para iniciantes e não precisa saber inglês antes.",
@@ -56,6 +58,8 @@ function ask(v){
     clearTimeout(to);typing(false);
     var a=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
     a=(a||"").trim();
+    a=a.replace(/^(okay|so|well|let me|we should|i should|i will|i need|the user|first)[\s\S]{0,160}?\.\s*/i,"").trim();
+    if(/^(okay|so|well|let me|we should|i should|i will|i need|the user)/i.test(a))a=a.replace(/^[\s\S]{0,160}?\.\s*/,"").trim();
     if(!a)throw 0;
     if(/r\$\s?\d|\d+\s?x\s?de|reembolso garantido|garantia de \d/i.test(a)){var b=match(v)||QA[3];say(b.a,"bot",1);return}
     hist.push({role:"user",content:v},{role:"assistant",content:a});
